@@ -30,7 +30,9 @@ OTHER_FILES += qml/harbour-gitlovr.qml \
     qml/pages/IssueDetails.qml \
     qml/pages/IssuesPage.qml \
     qml/pages/RepoOverview.qml \
-    qml/pages/StartPage.qml
+    qml/pages/StartPage.qml \
+    qml/Sha.js \
+    qml/Storage.js
 
 # to disable building translations every time, comment out the
 # following CONFIG line
@@ -41,4 +43,6 @@ CONFIG += sailfishapp_i18n
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
 TRANSLATIONS += translations/harbour-gitlovr-de.ts
+
+HEADERS +=
 

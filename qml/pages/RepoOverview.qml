@@ -6,102 +6,153 @@ import "../Helper.js" as Helper
 
 
 Page {
+    allowedOrientations: Orientation.All
+
+    property var repo;
 
     Component.onCompleted: {
-            console.log(currentRepo.url)
-            API.get_Url(currentRepo.url, repoLoaded)
+        API.get_Url(repo.url, repoLoaded)
 
     }
 
-    Column {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        id: label
 
+    SilicaFlickable {
+        anchors.fill: parent
+        contentHeight: repoOverviewCol.height
 
-        Row {
-
-            spacing: 3
-            Label {
-                text: currentRepo.owner.login
-                opacity: 0.7
+        Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            id: repoOverviewCol
+            PageHeader {
+                id: page_header
+                title: repo.owner.login + " / " + repo.name
             }
 
-            Label {
-                text: currentRepo.name
-            }
-        }
-        Item {
-            height: rowFork.height
-            width: parent.width
-            Row {
-                id: rowFork
-                visible: typeof(currentRepo.parent) != 'undefined'
-                spacing: 3
-                Label {
-                    text: "Forked from"
-                }
-                Label {
-                    text: currentRepo.parent.owner.login
-                    opacity: 0.7
-                }
+            BackgroundItem {
+                height: Theme.itemSizeMedium
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: Theme.paddingLarge
+                anchors.rightMargin: Theme.paddingLarge
+                visible: typeof(repo.parent) != 'undefined'
 
-                Label {
-                    text: currentRepo.parent.name
+                Row {
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    id: rowFork
+                    Label {
+                        text: "Forked from "
+                    }
+                    Label {
+                        text:  typeof(repo.parent) != 'undefined' ? repo.parent.owner.login : ""
+                        opacity: 0.7
+                    }
+                    Label {
+                        text: " / "
+                        opacity: 0.7
+                    }
+
+                    Label {
+                        text: typeof(repo.parent) != 'undefined' ? repo.parent.name : ""
+                    }
                 }
-            }
-            MouseArea {
-                anchors.fill: parent
                 onClicked: {
-                    currentRepo = currentRepo.parent
+                    pageStack.push(Qt.resolvedUrl("RepoOverview.qml"),{repo: repo.parent})
                 }
+
             }
-        }
 
 
 
-        Label {
-            text: currentRepo.description
-            width: parent.width
-            wrapMode:Text.Wrap
-        }
-
-        Label {
-            text: currentRepo.stargazers_count + " stargazers"
-        }
-
-        Label {
-            text: currentRepo.watchers_count + " watchers"
-        }
-
-        Label {
-            text: currentRepo.forks_count + " forks"
-        }
-        Item {
-            height: issuesLabel.height
-            width: parent.width
             Label {
-                id: issuesLabel
-                text: currentRepo.open_issues_count + " open issues"
+                anchors.topMargin: Theme.paddingSmall
+                anchors.bottomMargin: Theme.paddingSmall
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: Theme.paddingLarge
+                anchors.rightMargin: Theme.paddingLarge
+                text: repo.description
+                color: Theme.secondaryHighlightColor
+                wrapMode:Text.Wrap
+            }
+
+            BackgroundItem {
+                height: Theme.itemSizeMedium
+                width: parent.width
+
+                Label {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: Theme.paddingLarge
+                    anchors.rightMargin: Theme.paddingLarge
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: repo.stargazers_count + " stargazers"
+                }
+
 
             }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: pageStack.push(Qt.resolvedUrl("IssuesPage.qml"))
+
+            BackgroundItem {
+                height: Theme.itemSizeMedium
+                width: parent.width
+
+                Label {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: Theme.paddingLarge
+                    anchors.rightMargin: Theme.paddingLarge
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: repo.watchers_count + " watchers"
+
+                }
+
+            }
+
+            BackgroundItem {
+                height: Theme.itemSizeMedium
+                width: parent.width
+                Label {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: Theme.paddingLarge
+                    anchors.rightMargin: Theme.paddingLarge
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: repo.forks_count + " forks"
+                }
+
+            }
+            BackgroundItem {
+                height: Theme.itemSizeMedium
+                width: parent.width
+                Label {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: Theme.paddingLarge
+                    anchors.rightMargin: Theme.paddingLarge
+                    id: issuesLabel
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: repo.open_issues_count + " open issues"
+
+                }
+
+                onClicked: pageStack.push(Qt.resolvedUrl("IssuesPage.qml"),{repo:repo})
+
 
 
 
             }
+
+
+
+
+
         }
-
-
-
-
+        VerticalScrollDecorator {}
 
     }
-    function repoLoaded(data) {
-        console.log(Helper.serialize(data))
 
-        currentRepo =data
+    function repoLoaded(data) {
+        repo =data
     }
 }

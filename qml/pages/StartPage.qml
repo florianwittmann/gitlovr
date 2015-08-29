@@ -6,6 +6,7 @@ import "../Helper.js" as Helper
 
 
 Page {
+    allowedOrientations: Orientation.All
 
     property var reposData : null
 
@@ -17,44 +18,61 @@ Page {
 
     SilicaListView {
         anchors.fill: parent
+
+        header: PageHeader {
+            id: page_header
+            title: "Your repositories"
+        }
+
+
         model: repoModel
-        delegate: Item {
-            height: label.height
+        delegate: BackgroundItem {
+            height: repo.height + Theme.paddingSmall*2
             anchors.left: parent.left
             anchors.right: parent.right
 
             Column {
-                id: label
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: Theme.paddingLarge
+                anchors.rightMargin: Theme.paddingLarge
+                anchors.verticalCenter: parent.verticalCenter
+                id: repo
                 Row {
 
-                    spacing: 3
                     Label {
                         text: owner.login
                         opacity: 0.7
+                        color: highlighted ? Theme.highlightColor : Theme.primaryColor
+                    }
+
+                    Label {
+                        text: " / "
+                        opacity: 0.7
+                        color: highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
 
                     Label {
                         text: name
+                        color: highlighted ? Theme.highlightColor : Theme.primaryColor
                     }
                 }
                 Row {
                     Label {
                         text: stargazers_count + " stargazers"
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
                     }
                 }
             }
 
-
-
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    currentRepo = reposData[index]
-                    pageStack.push(Qt.resolvedUrl("RepoOverview.qml"))
-                }
+            onClicked: {
+                pageStack.push(Qt.resolvedUrl("RepoOverview.qml"),{repo:reposData[index]})
             }
+
+
         }
+        VerticalScrollDecorator {}
     }
 
     ListModel {
@@ -63,7 +81,6 @@ Page {
 
 
     function reposLoaded(data) {
-        console.log(Helper.serialize(data))
         repoModel.clear()
         for (var i = 0; i < data.length; i++) {
             repoModel.append(data[i])

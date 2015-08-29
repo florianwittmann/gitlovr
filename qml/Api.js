@@ -1,13 +1,9 @@
 .pragma library
 
-var coverImage = "";
-var coverUsername =""
 var BASE="https://api.github.com"
 var access_token = "";
-var selfId;
 
 function request(verb, endpoint, obj, cb, includeBase) {
-    print('request: ' + verb + ' ' + (includeBase? BASE:'') + (endpoint? endpoint:''))
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if(xhr.readyState === XMLHttpRequest.DONE) {
@@ -31,10 +27,8 @@ function request(verb, endpoint, obj, cb, includeBase) {
     xhr.send(data)
 }
 
-function authorize(code,cb) {
-    var  client_id = 'CLIENTID'
-    var client_secret ='CLIENTSECRET'
-    request('POST', 'https://github.com/login/oauth/access_token?client_id=' + client_id + '&client_secret=' + client_secret + '&code=' + code, null, cb, false)
+function authorize(code, hash, url, cb) {
+    request('GET', url + code + '/' + hash , null, cb, false)
 }
 function get_Url(url, cb) {
     request('GET', url + '?access_token=' + access_token, null, cb, false)

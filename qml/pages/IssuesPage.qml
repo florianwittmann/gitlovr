@@ -5,56 +5,56 @@ import "../Helper.js" as Helper
 
 Page {
 
+    allowedOrientations: Orientation.All
+    property var repo;
+
     property var issuesData : null
 
-    onVisibleChanged: {
-        if(visible && currentRepo != null) {
-            API.get_IssuesOfRepo(currentRepo.owner.login, currentRepo.name, issuesLoaded)
-        }
+
+    Component.onCompleted: {
+        API.get_IssuesOfRepo(repo.owner.login, repo.name, issuesLoaded)
     }
 
-    Button {
-        text: "Back"
-        onClicked: currentSite =2
-        anchors.top: parent.top
-        id: backBtn
-    }
-
-    ListView {
-        anchors.top: backBtn.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+    SilicaListView {
+        anchors.fill: parent
         model: issuesModel
-        delegate: Item {
-            height: label.height
+        header: PageHeader {
+            id: page_header
+            title: "Issues"
+        }
+
+        delegate: BackgroundItem {
+            height: issue.height + Theme.paddingSmall*2
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.leftMargin: Theme.paddingLarge
+            anchors.rightMargin: Theme.paddingLarge
 
             Column {
-                id: label
-                Row {
-
+                anchors.verticalCenter: parent.verticalCenter
+                id: issue
+                Column {
                     spacing: 3
 
                     Label {
                         text: title
+                        color: highlighted ? Theme.highlightColor : Theme.primaryColor
+
+                    }
+
+                    Label {
+                        text: "#" + number + " opened by " + user.login
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
                     }
                 }
-
-
             }
 
 
-
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    currentIssue = issuesData[index]
-                    pageStack.push(Qt.resolvedUrl("IssueDetails.qml"))
-                }
+            onClicked: {
+                pageStack.push(Qt.resolvedUrl("IssueDetails.qml"),{issue:issuesData[index]})
             }
+
         }
     }
 
@@ -63,7 +63,6 @@ Page {
     }
 
     function issuesLoaded(data) {
-        console.log(Helper.serialize(data))
         issuesModel.clear()
         for (var i = 0; i < data.length; i++) {
             issuesModel.append(data[i])

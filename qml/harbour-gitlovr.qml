@@ -30,15 +30,26 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.LocalStorage 2.0
 import "pages"
+import "Api.js" as API
+import "Storage.js" as Storage
 
 ApplicationWindow
 {
-    property var currentRepo : null
-    property var currentIssue : null
 
-    initialPage: Component { AuthPage { } }
+    initialPage: getInitialPage()
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
+    function getInitialPage() {
+        var token = Storage.get("authtoken", "")
+        if (token === "" || token === null) {
+            return Qt.resolvedUrl("pages/AuthPage.qml")
+        } else {
+            API.access_token = token
+            return Qt.resolvedUrl(Qt.resolvedUrl("pages/StartPage.qml"))
+        }
+    }
 }
 
 
