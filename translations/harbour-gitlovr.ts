@@ -4,11 +4,11 @@
 <context>
     <name>AuthPage</name>
     <message>
-        <source>Welcome.</source>
+        <source>Continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Continue</source>
+        <source>Welcome to GitLovr, an unoffical Github client for SailfishOS. Please press &apos;continue&apos; to login to your Github account.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

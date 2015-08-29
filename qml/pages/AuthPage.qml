@@ -29,7 +29,7 @@ Page {
         anchors.fill: parent
 
         Label {
-            text: qsTr("Welcome.")
+            text: qsTr("Welcome to GitLovr, an unoffical Github client for SailfishOS. Please press 'continue' to login to your Github account.")
             anchors.left: parent.left
             anchors.leftMargin: Theme.paddingLarge
             anchors.right: parent.right

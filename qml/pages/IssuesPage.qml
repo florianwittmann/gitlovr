@@ -27,27 +27,32 @@ Page {
             height: issue.height + Theme.paddingSmall*2
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.leftMargin: Theme.paddingLarge
-            anchors.rightMargin: Theme.paddingLarge
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
                 id: issue
-                Column {
-                    spacing: 3
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: Theme.paddingLarge
+                anchors.rightMargin: Theme.paddingLarge
 
-                    Label {
-                        text: title
-                        color: highlighted ? Theme.highlightColor : Theme.primaryColor
+                Label {
+                   text: title
+                   color: highlighted ? Theme.highlightColor : Theme.primaryColor
+                   truncationMode: TruncationMode.Fade
+                   anchors.left: parent.left
+                   anchors.right: parent.right
 
-                    }
-
-                    Label {
-                        text: "#" + number + " opened by " + user.login
-                        font.pixelSize: Theme.fontSizeSmall
-                        color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
-                    }
                 }
+
+                Label {
+                    text: "#" + number + " opened by " + user.login
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: highlighted ? Theme.secondaryHighlightColor : Theme.secondaryColor
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+
             }
 
 
